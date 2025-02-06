@@ -207,7 +207,7 @@ $(function () {
 
     // Show Hidden Message at the End
     audio.addEventListener("timeupdate", function () {
-        if (audio.currentTime > 180) { // Adjust if needed
+        if (audio.currentTime > 30) { // Adjust if needed
             $("#bemine").removeClass("hidden").addClass("roEdgeUpIn");
         }
     });
