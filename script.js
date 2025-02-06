@@ -155,74 +155,64 @@ var myPen = {};
 
 
 // BEGIN AUDIOO PLAYER
+$(function () {
+    var audio = $("#player")[0];
 
-$(function() {
+    $("#opening_screen").on("click", function () {
+        $(this).addClass("roEdgeUpOut");
+        $(".player_container").toggleClass("hidden roEdgeUpIn");
 
-	var audio = $("audio")[0];
-	$('#opening_screen').on('click', function() {
-		$('#opening_screen').addClass('roEdgeUpOut');
+        if (audio.paused) {
+            audio.play();
+            $("#btn-play-pause i").removeClass("fa-play").addClass("fa-pause");
+        } else {
+            audio.pause();
+            $("#btn-play-pause i").removeClass("fa-pause").addClass("fa-play");
+        }
+    });
 
-		$('.player_container').toggleClass('hidden roEdgeUpIn');
-		//Play/pause the track
-		if (audio.paused == false) {
-			audio.pause();
-			$('#btn-play-pause').children('i').removeClass('fa-pause');
-			$('#btn-play-pause').children('i').addClass('fa-play');
+    $("#btn-play-pause").on("click", function () {
+        if (audio.paused) {
+            audio.play();
+            $(this).children("i").removeClass("fa-play").addClass("fa-pause");
+        } else {
+            audio.pause();
+            $(this).children("i").removeClass("fa-pause").addClass("fa-play");
+        }
+    });
 
-		} else {
-			audio.play();
-			$('#btn-play-pause').children('i').removeClass('fa-play');
-			$('#btn-play-pause').children('i').addClass('fa-pause');
-		}
-	});
-	$('#btn-play-pause').on('click', function() {
-		//Play/pause the track
-		if (audio.paused == false) {
-			audio.pause();
-			$(this).children('i').removeClass('fa-pause');
-			$(this).children('i').addClass('fa-play');
-		} else {
-			audio.play();
-			$(this).children('i').removeClass('fa-play');
-			$(this).children('i').addClass('fa-pause');
-		}
-	});
+    $("#btn-stop").on("click", function () {
+        audio.pause();
+        audio.currentTime = 0;
+        $("#btn-play-pause i").removeClass("fa-pause").addClass("fa-play");
+    });
 
-	$('#btn-stop').on('click', function() {
-		//Stop the track
-		audio.pause();
-		audio.currentTime = 0;
-		$('#btn-play-pause').children('i').removeClass('fa-pause');
-		$('#btn-play-pause').children('i').addClass('fa-play');
-	});
+    $("#btn-mute").on("click", function () {
+        if (audio.volume != 0) {
+            audio.volume = 0;
+            $(this).children("i").removeClass("fa-volume-off").addClass("fa-volume-up");
+        } else {
+            audio.volume = 1;
+            $(this).children("i").removeClass("fa-volume-up").addClass("fa-volume-off");
+        }
+    });
 
-	$('#btn-mute').on('click', function() {
-		//Mutes/unmutes the sound
-		if (audio.volume != 0) {
-			audio.volume = 0;
-			$(this).children('i').removeClass('fa-volume-off');
-			$(this).children('i').addClass('fa-volume-up');
-		} else {
-			audio.volume = 1;
-			$(this).children('i').removeClass('fa-volume-up');
-			$(this).children('i').addClass('fa-volume-off');
-		}
-	});
+    function updateProgress() {
+        var progress = document.getElementById("progress");
+        var value = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = value + "%";
+    }
 
-	function updateProgress() {
-		//Updates the progress bar
-		var progress = document.getElementById("progress");
-		var value = 0;
-		if (audio.currentTime > 0) {
-			value = Math.floor((100 / audio.duration) * audio.currentTime);
-		}
-		progress.style.width = value + "%";
-	}
+    audio.addEventListener("timeupdate", updateProgress, false);
 
-	//Progress Bar event listener
-	audio.addEventListener("timeupdate", updateProgress, false);
-
+    // Show Hidden Message at the End
+    audio.addEventListener("timeupdate", function () {
+        if (audio.currentTime > 180) { // Adjust if needed
+            $("#bemine").removeClass("hidden").addClass("roEdgeUpIn");
+        }
+    });
 });
+
 // END AUDIOO PLAYER
 
 // BEGIN AUDIO SYNCHING
